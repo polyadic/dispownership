@@ -17,6 +17,12 @@ static class Disposable
         where TDisposable : IDisposable
         => new(value, hasOwnership: true);
 
+    /// <summary>Creates a owned wrapper around a disposable i.e. the disposable will be disposed when the wrapper is disposed.</summary>
+    /// <remarks>This overload is useful to communicate the ownership to analyzers such as <c>IDisposableAnalyzers</c>.</remarks>
+    public static Disposable<TDisposable> Owned<TDisposable>(Func<TDisposable> createValue)
+        where TDisposable : IDisposable
+        => Owned(createValue());
+
     /// <summary>Creates a borrowing wrapper around a disposable i.e. the disposable will not be disposed when the wrapper is disposed.</summary>
     public static Disposable<TDisposable> Borrowed<TDisposable>(TDisposable value)
         where TDisposable : IDisposable
