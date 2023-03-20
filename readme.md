@@ -58,8 +58,8 @@ public TempSubdirectory CreateTempSubdirectoryWithExampleFiles()
     //   ^^^^^^^^^^^^
     // If this throws, our disposable will be cleaned up by the wrapper.
 
-    return tempDirectory.Move();
-    //                  ^^^^^^^
+    return tempDirectory.Take();
+    //                  ^^^^^^
     //   This "moves" the disposable out of the wrapper,
     //   preventing the wrapper from disposing our value when the function returns.
 }
@@ -117,8 +117,8 @@ public TempSubdirectory CreateTempSubdirectoryWithExampleFiles()
     //   ^^^^^^^^^^^^
     // If this throws, our disposable will be cleaned up by the wrapper.
 
-    return tempDirectory.Move();
-    //                  ^^^^^^^
+    return tempDirectory.Take();
+    //                  ^^^^^^
     //   This "moves" the disposable out of the wrapper,
     //   preventing the wrapper from disposing our value when the function returns.
 }
