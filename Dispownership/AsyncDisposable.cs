@@ -19,6 +19,12 @@ static class AsyncDisposable
         where TDisposable : IAsyncDisposable
         => new(value, hasOwnership: true);
 
+    /// <summary>Creates a owned wrapper around a disposable i.e. the disposable will be disposed when the wrapper is disposed.</summary>
+    /// <remarks>This overload is useful to communicate the ownership to analyzers such as <c>IDisposableAnalyzers</c>.</remarks>
+    public static AsyncDisposable<TDisposable> Owned<TDisposable>(Func<TDisposable> createValue)
+        where TDisposable : IAsyncDisposable
+        => Owned(createValue());
+
     /// <summary>Creates a borrowing wrapper around a disposable i.e. the disposable will not be disposed when the wrapper is disposed.</summary>
     public static AsyncDisposable<TDisposable> Borrowed<TDisposable>(TDisposable value)
         where TDisposable : IAsyncDisposable
@@ -26,13 +32,13 @@ static class AsyncDisposable
 }
 
 /// <summary>A wrapper around an <see cref="IAsyncDisposable"/> that either owns or borrows the value.
-/// Use <see cref="AsyncDisposable.Owned{TDisposable}"/> or <see cref="AsyncDisposable.Borrowed{TDisposable}"/> to create an instance of this wrapper.</summary>
+/// Use <see cref="AsyncDisposable.Owned{TDisposable}(TDisposable)"/> or <see cref="AsyncDisposable.Borrowed{TDisposable}"/> to create an instance of this wrapper.</summary>
 #if DISPOWNERSHIP_VISIBILITY_PUBLIC
 public
 #else
 internal
 #endif
-struct AsyncDisposable<TDisposable> : IAsyncDisposable
+sealed class AsyncDisposable<TDisposable> : IAsyncDisposable
     where TDisposable : IAsyncDisposable
 {
     private readonly TDisposable _inner;

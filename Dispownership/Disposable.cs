@@ -17,6 +17,12 @@ static class Disposable
         where TDisposable : IDisposable
         => new(value, hasOwnership: true);
 
+    /// <summary>Creates a owned wrapper around a disposable i.e. the disposable will be disposed when the wrapper is disposed.</summary>
+    /// <remarks>This overload is useful to communicate the ownership to analyzers such as <c>IDisposableAnalyzers</c>.</remarks>
+    public static Disposable<TDisposable> Owned<TDisposable>(Func<TDisposable> createValue)
+        where TDisposable : IDisposable
+        => Owned(createValue());
+
     /// <summary>Creates a borrowing wrapper around a disposable i.e. the disposable will not be disposed when the wrapper is disposed.</summary>
     public static Disposable<TDisposable> Borrowed<TDisposable>(TDisposable value)
         where TDisposable : IDisposable
@@ -24,13 +30,13 @@ static class Disposable
 }
 
 /// <summary>A wrapper around an <see cref="IDisposable"/> that either owns or borrows the value.
-/// Use <see cref="Disposable.Owned{TDisposable}"/> or <see cref="Disposable.Borrowed{TDisposable}"/> to create an instance of this wrapper.</summary>
+/// Use <see cref="Disposable.Owned{TDisposable}(TDisposable)"/> or <see cref="Disposable.Borrowed{TDisposable}"/> to create an instance of this wrapper.</summary>
 #if DISPOWNERSHIP_VISIBILITY_PUBLIC
 public
 #else
 internal
 #endif
-struct Disposable<TDisposable> : IDisposable
+sealed class Disposable<TDisposable> : IDisposable
     where TDisposable : IDisposable
 {
     private readonly TDisposable _inner;
