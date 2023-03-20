@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net7.0;netstandard2.0</TargetFrameworks>
+        <Nullable>enable</Nullable>
+        <LangVersion>11.0</LangVersion>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Description>Ownership for Disposables</Description>
+        <PackageTags>Disposable Ownership</PackageTags>
+        <Version>0.1.0</Version>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <PackageReadmeFile>readme.md</PackageReadmeFile>
+    </PropertyGroup>
+    <PropertyGroup>
+        <IsTrimmable>true</IsTrimmable>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\readme.md" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);DISPOWNERSHIP_VISIBILITY_PUBLIC;DISPOWNERSHIP_ASYNC</DefineConstants>
+    </PropertyGroup>
+</Project>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.Build.NoTargets/3.7.0">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <ContentTargetFolders>contentFiles</ContentTargetFolders>
+        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <LangVersion>11.0</LangVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="..\Dispownership\*.cs" Exclude="$(DefaultItemExcludes)" Link="%(FileName)%(Extension)" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Update="@(Compile)">
+            <Pack>true</Pack>
+            <PackagePath>$(ContentTargetFolders)\cs\any\$(PackageId)\</PackagePath>
+        </Compile>
+    </ItemGroup>
+</Project>
