@@ -32,7 +32,7 @@ static class AsyncDisposable
 }
 
 /// <summary>A wrapper around an <see cref="IAsyncDisposable"/> that either owns or borrows the value.
-/// Use <see cref="AsyncDisposable.Owned{TDisposable}"/> or <see cref="AsyncDisposable.Borrowed{TDisposable}"/> to create an instance of this wrapper.</summary>
+/// Use <see cref="AsyncDisposable.Owned{TDisposable}(TDisposable)"/> or <see cref="AsyncDisposable.Borrowed{TDisposable}"/> to create an instance of this wrapper.</summary>
 #if DISPOWNERSHIP_VISIBILITY_PUBLIC
 public
 #else

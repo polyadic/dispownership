@@ -30,7 +30,7 @@ static class Disposable
 }
 
 /// <summary>A wrapper around an <see cref="IDisposable"/> that either owns or borrows the value.
-/// Use <see cref="Disposable.Owned{TDisposable}"/> or <see cref="Disposable.Borrowed{TDisposable}"/> to create an instance of this wrapper.</summary>
+/// Use <see cref="Disposable.Owned{TDisposable}(TDisposable)"/> or <see cref="Disposable.Borrowed{TDisposable}"/> to create an instance of this wrapper.</summary>
 #if DISPOWNERSHIP_VISIBILITY_PUBLIC
 public
 #else
