@@ -36,7 +36,7 @@ public
 #else
 internal
 #endif
-struct Disposable<TDisposable> : IDisposable
+sealed class Disposable<TDisposable> : IDisposable
     where TDisposable : IDisposable
 {
     private readonly TDisposable _inner;

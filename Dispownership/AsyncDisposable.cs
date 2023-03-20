@@ -38,7 +38,7 @@ public
 #else
 internal
 #endif
-struct AsyncDisposable<TDisposable> : IAsyncDisposable
+sealed class AsyncDisposable<TDisposable> : IAsyncDisposable
     where TDisposable : IAsyncDisposable
 {
     private readonly TDisposable _inner;
