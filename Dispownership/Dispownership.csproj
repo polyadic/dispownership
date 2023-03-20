@@ -7,7 +7,6 @@
     <PropertyGroup>
         <Description>Ownership for Disposables</Description>
         <PackageTags>Disposable Ownership</PackageTags>
-        <Version>0.1.0</Version>
         <IncludeSymbols>true</IncludeSymbols>
         <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <PackageReadmeFile>readme.md</PackageReadmeFile>
