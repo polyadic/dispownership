@@ -42,6 +42,7 @@ sealed class Disposable<TDisposable> : IDisposable
 {
     private readonly TDisposable _inner;
     private bool _hasOwnership;
+    private bool _disposed;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal Disposable(TDisposable inner, bool hasOwnership)
@@ -70,10 +71,17 @@ sealed class Disposable<TDisposable> : IDisposable
 
     public void Dispose()
     {
+        if (_disposed)
+        {
+            throw new ObjectDisposedException(nameof(Disposable));
+        }
+
+        _disposed = true;
+
         if (_hasOwnership)
         {
 #pragma warning disable IDISP007
-            _inner?.Dispose();
+            _inner.Dispose();
 #pragma warning restore IDISP007
         }
     }

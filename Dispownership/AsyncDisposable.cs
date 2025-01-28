@@ -44,6 +44,7 @@ sealed class AsyncDisposable<TDisposable> : IAsyncDisposable
 {
     private readonly TDisposable _inner;
     private bool _hasOwnership;
+    private bool _disposed;
 
     [EditorBrowsable(EditorBrowsableState.Never)]
     internal AsyncDisposable(TDisposable inner, bool hasOwnership)
@@ -70,11 +71,23 @@ sealed class AsyncDisposable<TDisposable> : IAsyncDisposable
         return _inner;
     }
 
-#pragma warning disable IDISP007
     public ValueTask DisposeAsync()
-        => _hasOwnership
-            ? (_inner?.DisposeAsync() ?? default)
-            : default;
+    {
+        if (_disposed)
+        {
+            return ValueTask.FromException(new ObjectDisposedException(nameof(AsyncDisposable)));
+        }
+
+        _disposed = true;
+
+        if (_hasOwnership)
+        {
+#pragma warning disable IDISP007
+            return _inner.DisposeAsync();
 #pragma warning restore IDISP007
+        }
+
+        return default;
+    }
 }
 #endif

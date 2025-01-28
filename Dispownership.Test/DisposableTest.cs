@@ -67,7 +67,25 @@ public sealed class DisposableTest
         Assert.Throws<InvalidOperationException>(() => disposable.Take());
     }
 
-    private sealed class DisposableStub : IDisposable
+    [Theory]
+    [MemberData(nameof(Disposables))]
+    public void ThrowsWhenDisposingTwice(Disposable<DisposableStub> disposable)
+    {
+#pragma warning disable IDISP007
+        disposable.Dispose();
+#pragma warning restore IDISP007
+        Assert.Throws<ObjectDisposedException>(disposable.Dispose);
+    }
+
+#pragma warning disable IDISP004
+    public static TheoryData<Disposable<DisposableStub>> Disposables()
+        => [
+            Disposable.Owned(new DisposableStub()),
+            Disposable.Borrowed(new DisposableStub()),
+        ];
+#pragma warning restore IDISP004
+
+    public sealed class DisposableStub : IDisposable
     {
         public bool Disposed { get; private set; }
 
