@@ -2,6 +2,7 @@
 #pragma warning disable IDE0005 // Disable unused usings warning if enabled in consuming project
 
 using System;
+using System.ComponentModel;
 
 namespace Dispownership;
 
@@ -42,6 +43,7 @@ sealed class Disposable<TDisposable> : IDisposable
     private readonly TDisposable _inner;
     private bool _hasOwnership;
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     internal Disposable(TDisposable inner, bool hasOwnership)
     {
         _inner = inner;

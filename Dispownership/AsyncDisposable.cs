@@ -3,6 +3,7 @@
 
 #if (NETSTANDARD2_1 || NET5_0_OR_GREATER) && DISPOWNERSHIP_ASYNC
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 
 namespace Dispownership;
@@ -44,6 +45,7 @@ sealed class AsyncDisposable<TDisposable> : IAsyncDisposable
     private readonly TDisposable _inner;
     private bool _hasOwnership;
 
+    [EditorBrowsable(EditorBrowsableState.Never)]
     internal AsyncDisposable(TDisposable inner, bool hasOwnership)
     {
         _inner = inner;
