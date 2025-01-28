@@ -4,7 +4,12 @@
         <TargetFramework>net9.0</TargetFramework>
         <IsPackable>false</IsPackable>
         <OutputType>Exe</OutputType>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Dispownership\Dispownership.csproj" />
     </ItemGroup>
