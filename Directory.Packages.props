@@ -4,7 +4,7 @@
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 	</PropertyGroup>
 	<ItemGroup Label="Build Dependencies">
-		<PackageVersion Include="Messerli.CodeStyle" Version="2.2.0" />
+		<PackageVersion Include="Polyadic.CodeStyle" Version="1.1.0" />
 	</ItemGroup>
 	<ItemGroup Label="Test Dependencies">
 		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />

@@ -10,7 +10,7 @@
 		<Copyright>© Polyadic. All rights reserved.</Copyright>
 	</PropertyGroup>
 	<ItemGroup Label="Code Style">
-		<PackageReference Include="Messerli.CodeStyle" PrivateAssets="all" />
+		<PackageReference Include="Polyadic.CodeStyle" PrivateAssets="all" />
 	</ItemGroup>
 	<PropertyGroup Label="Deterministic Builds and Source Link">
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
