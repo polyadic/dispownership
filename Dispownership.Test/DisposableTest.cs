@@ -66,12 +66,29 @@ public sealed class DisposableTest
 
     [Theory]
     [MemberData(nameof(Disposables))]
-    public void ThrowsWhenDisposingTwice(Disposable<DisposableStub> disposable)
+    public void ThrowsWhenAccessingADisposedValue(Disposable<DisposableStub> disposable)
     {
 #pragma warning disable IDISP007
         disposable.Dispose();
 #pragma warning restore IDISP007
-        Assert.Throws<ObjectDisposedException>(disposable.Dispose);
+        Assert.Throws<ObjectDisposedException>(() => _ = disposable.Value);
+        Assert.Throws<ObjectDisposedException>(() => _ = disposable.Take());
+    }
+
+    [Fact]
+    public void OnlyCallsDisposeOnTheInnerValueOnce()
+    {
+#pragma warning disable IDISP001
+        var stub = new CountingDisposableStub();
+        var disposable = Disposable.Owned(stub);
+#pragma warning restore IDISP001
+
+        foreach (var unused in Enumerable.Range(0, count: 10))
+        {
+            disposable.Dispose();
+        }
+
+        Assert.Equal(1, stub.Disposed);
     }
 
 #pragma warning disable IDISP004
@@ -87,5 +104,12 @@ public sealed class DisposableTest
         public bool Disposed { get; private set; }
 
         public void Dispose() => Disposed = true;
+    }
+
+    public sealed class CountingDisposableStub : IDisposable
+    {
+        public int Disposed { get; private set; }
+
+        public void Dispose() => Disposed += 1;
     }
 }

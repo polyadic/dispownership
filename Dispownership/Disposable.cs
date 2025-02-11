@@ -13,12 +13,12 @@ internal
 #endif
 static class Disposable
 {
-    /// <summary>Creates a owned wrapper around a disposable i.e. the disposable will be disposed when the wrapper is disposed.</summary>
+    /// <summary>Creates an owned wrapper around a disposable i.e. the disposable will be disposed when the wrapper is disposed.</summary>
     public static Disposable<TDisposable> Owned<TDisposable>(TDisposable value)
         where TDisposable : IDisposable
         => new(value, hasOwnership: true);
 
-    /// <summary>Creates a owned wrapper around a disposable i.e. the disposable will be disposed when the wrapper is disposed.</summary>
+    /// <summary>Creates an owned wrapper around a disposable i.e. the disposable will be disposed when the wrapper is disposed.</summary>
     /// <remarks>This overload is useful to communicate the ownership to analyzers such as <c>IDisposableAnalyzers</c>.</remarks>
     public static Disposable<TDisposable> Owned<TDisposable>(Func<TDisposable> createValue)
         where TDisposable : IDisposable
@@ -51,13 +51,24 @@ sealed class Disposable<TDisposable> : IDisposable
         _hasOwnership = hasOwnership;
     }
 
-    public TDisposable Value => _inner;
+    /// <exception cref="ObjectDisposedException">Thrown when this instance has been disposed.</exception>
+    public TDisposable Value
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _inner;
+        }
+    }
 
     /// <summary>Consumes the value leaving this wrapper without ownership.
     /// This is useful in scenarios where you want to create a disposable, do some work that might fail and then return it.</summary>
     /// <exception cref="InvalidOperationException">Thrown when this instance does not have ownership over the disposable.</exception>
+    /// <exception cref="ObjectDisposedException">Thrown when this instance has been disposed.</exception>
     public TDisposable Take()
     {
+        ThrowIfDisposed();
+
         if (!_hasOwnership)
         {
             throw new InvalidOperationException(
@@ -71,18 +82,27 @@ sealed class Disposable<TDisposable> : IDisposable
 
     public void Dispose()
     {
+        if (_hasOwnership)
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+#pragma warning disable IDISP007
+                _inner.Dispose();
+#pragma warning restore IDISP007
+            }
+        }
+        else
+        {
+            _disposed = true;
+        }
+    }
+
+    private void ThrowIfDisposed()
+    {
         if (_disposed)
         {
             throw new ObjectDisposedException(nameof(Disposable));
-        }
-
-        _disposed = true;
-
-        if (_hasOwnership)
-        {
-#pragma warning disable IDISP007
-            _inner.Dispose();
-#pragma warning restore IDISP007
         }
     }
 }

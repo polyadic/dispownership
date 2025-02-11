@@ -56,12 +56,29 @@ public sealed class AsyncDisposableTest
 
     [Theory]
     [MemberData(nameof(Disposables))]
-    public async Task ThrowsWhenDisposingTwice(AsyncDisposable<AsyncDisposableStub> disposable)
+    public async Task ThrowsWhenAccessingADisposedValue(AsyncDisposable<AsyncDisposableStub> disposable)
     {
 #pragma warning disable IDISP007
         await disposable.DisposeAsync();
 #pragma warning restore IDISP007
-        await Assert.ThrowsAsync<ObjectDisposedException>(async () => await disposable.DisposeAsync());
+        Assert.Throws<ObjectDisposedException>(() => _ = disposable.Value);
+        Assert.Throws<ObjectDisposedException>(() => _ = disposable.Take());
+    }
+
+    [Fact]
+    public async Task OnlyCallsDisposeOnTheInnerValueOnce()
+    {
+#pragma warning disable IDISP001
+        var stub = new CountingDisposableStub();
+        var disposable = AsyncDisposable.Owned(stub);
+#pragma warning restore IDISP001
+
+        foreach (var unused in Enumerable.Range(0, count: 10))
+        {
+            await disposable.DisposeAsync();
+        }
+
+        Assert.Equal(1, stub.Disposed);
     }
 
     public static TheoryData<AsyncDisposable<AsyncDisposableStub>> Disposables()
@@ -78,6 +95,17 @@ public sealed class AsyncDisposableTest
         {
             Disposed = true;
             return ValueTask.CompletedTask;
+        }
+    }
+
+    public sealed class CountingDisposableStub : IAsyncDisposable
+    {
+        public int Disposed { get; private set; }
+
+        public ValueTask DisposeAsync()
+        {
+            Disposed += 1;
+            return default;
         }
     }
 }
